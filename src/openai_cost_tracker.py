@@ -7,11 +7,6 @@ from openai.types.chat.chat_completion import ChatCompletion
 
 from constants import DEFAULT_LOG_PATH
 
-"""Clients supported."""
-class ClientType(Enum):
-    OPENAI = 1,
-    AZURE = 2
-
 """Every cost is per million tokens."""
 COST_UNIT = 1_000_000
 
@@ -26,14 +21,12 @@ FILE_HEADER = [
 class OpenAICostTracker:
     def __init__(
         self,
-        client: ClientType,
         model: str,
         input_cost: float,
         output_cost: float,
         experiment_name: str,
         cost_upperbound: float = float('inf'),
         log_folder: str = DEFAULT_LOG_PATH,
-        client_args: Dict = {}
     ):
         """Initialize the cost tracker.
 
@@ -59,7 +52,7 @@ class OpenAICostTracker:
             
     def update_cost(self, response: ChatCompletion) -> None:
         """Extract the number of input and output tokens from a chat completion response
-        and update the cost.
+        and update the cost. Saves experiment costs to file, overwriting it. 
            
         Args:
             response: ChatCompletion object from the model.
