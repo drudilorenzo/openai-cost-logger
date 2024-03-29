@@ -3,7 +3,7 @@ from enum import Enum
 from pathlib import Path
 from time import strftime
 from typing import List, Dict
-from openai import OpenAI, AzureOpenAI
+from openai.types.chat.chat_completion import ChatCompletion
 
 from constants import DEFAULT_LOG_PATH
 
@@ -55,28 +55,16 @@ class OpenAICostTracker:
         self.experiment_name = experiment_name
         self.cost_upperbound = cost_upperbound
         self.filename = f"{experiment_name}_cost_" + strftime("%Y%m%d_%H%M%S") + ".csv"
-        
-        if client.value == ClientType.OPENAI.value:
-            self.client = OpenAI(**client_args)
-        elif client.value == ClientType.AZURE.value:
-            self.client = AzureOpenAI(**client_args)
+
             
-    def chat_completion(self, messages: List[Dict], api_args: Dict = {}) -> str:
-        """Use the chat completion endpoint to get a response from the model
-           and update the cost tracker with the cost of the completion.
+    def update_cost(self, response: ChatCompletion) -> None:
+        """Extract the number of input and output tokens from a chat completion response
+        and update the cost.
            
         Args:
-            messages (list): A list of messages to send to the model. Every message is a dictionary with the key 'role' and the value 'content'.
-            api_args(Dict, optional): The parameters to pass to the api endpoint. Defaults to {}.
-        Returns:
-            str: The model's response.
+            response: ChatCompletion object from the model.
         """
-        answer = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            **api_args
-        )
-        self.cost += self.__get_answer_cost(answer)
+        self.cost += self.__get_answer_cost(response)
         self.__validate_cost()
         path = Path(self.log_folder, self.filename)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -86,7 +74,6 @@ class OpenAICostTracker:
             csvwriter = csv.writer(file)
             csvwriter.writerow(FILE_HEADER)
             csvwriter.writerow([self.experiment_name, self.model, self.cost])
-        return answer.choices[0].message.content
         
     def __get_answer_cost(self, answer: Dict) -> float:
         """Calculate the cost of the answer based on the input and output tokens.
