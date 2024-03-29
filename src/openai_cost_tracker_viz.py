@@ -95,6 +95,3 @@ class OpenAICostTrackerViz:
         plt.ylabel('Cost')
         plt.title('Cost by day')
         plt.show()
-        
-    
-        
