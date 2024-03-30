@@ -92,6 +92,6 @@ class OpenAICostTrackerViz:
         
         plt.bar(cost_by_day.keys(), cost_by_day.values(), width=0.5)
         plt.xlabel('Day')
-        plt.ylabel('Cost')
+        plt.ylabel('Cost [$]')
         plt.title('Cost by day')
         plt.show()
