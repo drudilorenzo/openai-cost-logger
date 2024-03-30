@@ -36,4 +36,14 @@ Change:
     }
     ```
 
-3. WIP
+3. model has to be provided in form of enum
+Change:
+    - we can just infer it from `response.model`
+    - removes possible problems with choosing the right enum or forgetting to change it while changing the model for experiment
+
+4. datetime strftime format
+Change: 
+ - change strftime format to `strftime("%Y-%m-%d_%H:%M:%S")`, makes it more readable
+ - we could possibly infer the datetime and do plots with datetime instead of str
+
+5. WIP
