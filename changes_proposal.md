@@ -46,7 +46,7 @@ Change:
     - we can just infer it from `response.model`
     - removes possible problems with choosing the right enum or forgetting to change it while changing the model for experiment
 
-5. ⌛ datetime strftime format
+5. ✅ datetime strftime format - PR ready
 
 Change: 
  - change strftime format to `strftime("%Y-%m-%d_%H:%M:%S")`, makes it more readable
