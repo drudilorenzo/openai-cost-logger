@@ -47,7 +47,7 @@ class OpenAICostTracker:
         self.output_cost = output_cost
         self.experiment_name = experiment_name
         self.cost_upperbound = cost_upperbound
-        self.filename = f"{experiment_name}_cost_" + strftime("%Y%m%d_%H%M%S") + ".csv"
+        self.filename = f"{experiment_name}_cost_" + strftime("%Y-%m-%d_%H:%M:%S") + ".csv"
 
             
     def update_cost(self, response: ChatCompletion) -> None:
