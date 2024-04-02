@@ -1,4 +1,4 @@
-1. ✅ cost tracker handles completion creation
+1. ✅ cost tracker handles completion creation - PR ready
 
 Change: separating completion and cost tracking, by changing the main functionality from `chat_completion` to `update_cost`
 
