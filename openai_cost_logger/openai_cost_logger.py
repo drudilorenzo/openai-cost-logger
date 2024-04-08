@@ -1,11 +1,10 @@
 import csv
-from enum import Enum
+from typing import Dict
 from pathlib import Path
 from time import strftime
-from typing import List, Dict
 from openai.types.chat.chat_completion import ChatCompletion
 
-from constants import DEFAULT_LOG_PATH
+from openai_cost_logger.constants import DEFAULT_LOG_PATH
 
 """Every cost is per million tokens."""
 COST_UNIT = 1_000_000
@@ -17,8 +16,8 @@ FILE_HEADER = [
     "cost"
 ]
 
-"""OpenAI cost tracker"""
-class OpenAICostTracker:
+"""OpenAI cost logger"""
+class OpenAICostLogger:
     def __init__(
         self,
         model: str,
@@ -28,7 +27,7 @@ class OpenAICostTracker:
         cost_upperbound: float = float('inf'),
         log_folder: str = DEFAULT_LOG_PATH,
     ):
-        """Initialize the cost tracker.
+        """Initialize the cost logger.
 
         Args:
             client (enum.ClientType): The client to use.
@@ -49,7 +48,6 @@ class OpenAICostTracker:
         self.cost_upperbound = cost_upperbound
         self.filename = f"{experiment_name}_cost_" + strftime("%Y-%m-%d_%H:%M:%S") + ".csv"
 
-            
     def update_cost(self, response: ChatCompletion) -> None:
         """Extract the number of input and output tokens from a chat completion response
         and update the cost. Saves experiment costs to file, overwriting it. 
@@ -68,6 +66,14 @@ class OpenAICostTracker:
             csvwriter.writerow(FILE_HEADER)
             csvwriter.writerow([self.experiment_name, self.model, self.cost])
         
+    def get_current_cost(self) -> float:
+        """Get the current cost of the cost tracker.
+
+        Returns:
+            float: The current cost.
+        """
+        return self.cost
+    
     def __get_answer_cost(self, answer: Dict) -> float:
         """Calculate the cost of the answer based on the input and output tokens.
 
@@ -86,12 +92,4 @@ class OpenAICostTracker:
             Exception: If the cost exceeds the upperbound.
         """
         if self.cost > self.cost_upperbound:
-            raise Exception(f"Cost exceeded upperbound: {self.cost} > {self.cost_upperbound}")        
-            
-    def get_current_cost(self) -> float:
-        """Get the current cost of the cost tracker.
-
-        Returns:
-            float: The current cost.
-        """
-        return self.cost
+            raise Exception(f"Cost exceeded upperbound: {self.cost} > {self.cost_upperbound}")

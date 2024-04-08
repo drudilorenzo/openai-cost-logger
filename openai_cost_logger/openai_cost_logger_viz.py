@@ -5,9 +5,9 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
-from constants import DEFAULT_LOG_PATH
+from openai_cost_logger.constants import DEFAULT_LOG_PATH
 
-class OpenAICostTrackerViz:
+class OpenAICostLoggerViz:
     
     @staticmethod
     def get_total_cost(path: str = DEFAULT_LOG_PATH) -> float:
@@ -15,7 +15,7 @@ class OpenAICostTrackerViz:
 
         Args:
             log_folder (str, optional): Cost logs directory. Defaults to DEFAULT_LOG_PATH.
-
+                                        This method reads all the files in the specified directory.
         Returns:
             float: the total cost.
         """
@@ -34,9 +34,10 @@ class OpenAICostTrackerViz:
 
         Args:
             log_folder (str, optional): Cost logs directory. Defaults to DEFAULT_LOG_PATH.
+                                        This method reads all the files in the specified directory.
         """
         
-        print(f"Total cost: {round(OpenAICostTrackerViz.get_total_cost(path), 6)} (USD)")
+        print(f"Total cost: {round(OpenAICostLoggerViz.get_total_cost(path), 6)} (USD)")
         
     @staticmethod
     def get_total_cost_by_model(path: str = DEFAULT_LOG_PATH) -> Dict[str, float]:
@@ -44,6 +45,7 @@ class OpenAICostTrackerViz:
 
         Args:
             log_folder (str, optional): Cost logs directory. Defaults to DEFAULT_LOG_PATH.
+                                        This method reads all the files in the specified directory.
 
         Returns:
             Dict[str, float]: the total cost by model.
@@ -64,8 +66,9 @@ class OpenAICostTrackerViz:
 
         Args:
             log_folder (str, optional): Cost logs directory. Defaults to DEFAULT_LOG_PATH.
+                                        This method reads all the files in the specified directory.
         """
-        cost_by_model = OpenAICostTrackerViz.get_total_cost_by_model(path)
+        cost_by_model = OpenAICostLoggerViz.get_total_cost_by_model(path)
         for model, cost in cost_by_model.items():
             print(f"{model}: {round(cost, 6)} (USD)")
         
@@ -75,6 +78,7 @@ class OpenAICostTrackerViz:
 
         Args:
             path (str, optional): Cost logs directory. Defaults to DEFAULT_LOG_PATH.
+                                  This method reads all the files in the specified directory.
             last_n_days (int, optional): The number of last days to plot. Defaults to None.
         """
         cost_by_day = defaultdict(float)

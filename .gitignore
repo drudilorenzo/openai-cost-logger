@@ -8,5 +8,15 @@ azure_openai_key.txt
 openai_api_key.txt
 openai_organization.txt
 
+# PyPi API token
+pypi_api_token.txt
+
 # Cost log files
 cost-logs/
+
+# PyTest
+.pytest_cache
+*.egg-info/ 
+
+build/
+dist/
