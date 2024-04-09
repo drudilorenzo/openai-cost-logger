@@ -1,7 +1,7 @@
 from pathlib import Path
 
-"""OpenAI cost tracker utilities functions."""
-class OpenAICostTrackerUtils:
+"""OpenAI cost logger utilities functions."""
+class OpenAICostLoggerUtils:
 
     @staticmethod
     def get_api_key(path: str) -> str:
