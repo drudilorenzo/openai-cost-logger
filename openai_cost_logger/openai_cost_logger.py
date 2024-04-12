@@ -1,4 +1,5 @@
 import csv
+import json
 from typing import Dict
 from pathlib import Path
 from time import strftime
@@ -26,6 +27,7 @@ class OpenAICostLogger:
         experiment_name: str,
         cost_upperbound: float = float('inf'),
         log_folder: str = DEFAULT_LOG_PATH,
+        log_level: str = "detail"
     ):
         """Initialize the cost logger.
 
@@ -46,7 +48,15 @@ class OpenAICostLogger:
         self.output_cost = output_cost
         self.experiment_name = experiment_name
         self.cost_upperbound = cost_upperbound
-        self.filename = f"{experiment_name}_cost_" + strftime("%Y-%m-%d_%H:%M:%S") + ".csv"
+        self.log_level = log_level
+        self.creation_datetime = strftime("%Y-%m-%d_%H:%M:%S")
+        self.filename = f"{experiment_name}_{self.creation_datetime}"
+        self.filepath_csv = Path(self.log_folder, self.filename + ".csv")
+        self.filepath_json = Path(self.log_folder, self.filename + ".json")
+
+        self.__check_existance_log_folder()
+        self.__build_log_file()
+
 
     def update_cost(self, response: ChatCompletion) -> None:
         """Extract the number of input and output tokens from a chat completion response
@@ -56,15 +66,57 @@ class OpenAICostLogger:
             response: ChatCompletion object from the model.
         """
         self.cost += self.__get_answer_cost(response)
+        self.__write_cost_to_file()
+        self.__write_cost_to_json(response)
         self.__validate_cost()
-        path = Path(self.log_folder, self.filename)
-        path.parent.mkdir(parents=True, exist_ok=True)
-    
+
+    def __write_cost_to_file(self) -> None:
         # Be careful, it overwrites the file if it already exists
-        with open(path, mode='w') as file:
+        filepath = self.filepath_csv
+        with open(filepath, mode='w') as file:
             csvwriter = csv.writer(file)
             csvwriter.writerow(FILE_HEADER)
             csvwriter.writerow([self.experiment_name, self.model, self.cost])
+
+    def __write_cost_to_json(self, response: ChatCompletion) -> None:
+        """Write the cost to a json file. 
+
+        Args:
+            response (ChatCompletion): The response from the model.
+        """
+        filepath = self.filepath_json
+        with open(filepath, 'r') as file:
+            data = json.load(file)
+            data["total_cost"] = self.cost
+            data["breakdown"].append(self.__build_log_breadown_entry(response))
+        with open(filepath, 'w') as file:
+            json.dump(data, file, indent=4)
+
+    def __check_existance_log_folder(self) -> None:
+        self.filepath_json.parent.mkdir(parents=True, exist_ok=True)
+        self.filepath_csv.parent.mkdir(parents=True, exist_ok=True)
+
+    def __build_log_file(self) -> None:
+        log_file_template = {
+            "experiment_name": self.experiment_name,
+            "datetime": strftime("%Y-%m-%d %H:%M:%S"),
+            "model": self.model,
+            "total_cost": self.cost,
+            "breakdown": []
+        }
+        filepath = self.filepath_json
+        with open(filepath, 'w') as file:
+            json.dump(log_file_template, file, indent=4)
+    
+    def __build_log_breadown_entry(self, response: ChatCompletion) -> Dict:
+        return {
+            "cost": self.__get_answer_cost(response),
+            "input_tokens": response.usage.prompt_tokens,
+            "output_tokens": response.usage.completion_tokens,
+            "content": response.choices[0].message.content,
+            "inferred_model": response.model,
+            "datetime": strftime("%Y-%m-%d %H:%M:%S"),
+        }
         
     def get_current_cost(self) -> float:
         """Get the current cost of the cost tracker.
