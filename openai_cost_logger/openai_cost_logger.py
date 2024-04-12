@@ -50,9 +50,8 @@ class OpenAICostLogger:
         self.cost_upperbound = cost_upperbound
         self.log_level = log_level
         self.creation_datetime = strftime("%Y-%m-%d_%H:%M:%S")
-        self.filename = f"{experiment_name}_{self.creation_datetime}"
-        self.filepath_csv = Path(self.log_folder, self.filename + ".csv")
-        self.filepath_json = Path(self.log_folder, self.filename + ".json")
+        self.filename = f"{experiment_name}_{self.creation_datetime}.json"
+        self.filepath = Path(self.log_folder, self.filename)
 
         self.__check_existance_log_folder()
         self.__build_log_file()
@@ -66,17 +65,8 @@ class OpenAICostLogger:
             response: ChatCompletion object from the model.
         """
         self.cost += self.__get_answer_cost(response)
-        self.__write_cost_to_file()
         self.__write_cost_to_json(response)
         self.__validate_cost()
-
-    def __write_cost_to_file(self) -> None:
-        # Be careful, it overwrites the file if it already exists
-        filepath = self.filepath_csv
-        with open(filepath, mode='w') as file:
-            csvwriter = csv.writer(file)
-            csvwriter.writerow(FILE_HEADER)
-            csvwriter.writerow([self.experiment_name, self.model, self.cost])
 
     def __write_cost_to_json(self, response: ChatCompletion) -> None:
         """Write the cost to a json file. 
@@ -84,28 +74,25 @@ class OpenAICostLogger:
         Args:
             response (ChatCompletion): The response from the model.
         """
-        filepath = self.filepath_json
-        with open(filepath, 'r') as file:
+        with open(self.filepath, 'r') as file:
             data = json.load(file)
             data["total_cost"] = self.cost
             data["breakdown"].append(self.__build_log_breadown_entry(response))
-        with open(filepath, 'w') as file:
+        with open(self.filepath, 'w') as file:
             json.dump(data, file, indent=4)
 
     def __check_existance_log_folder(self) -> None:
-        self.filepath_json.parent.mkdir(parents=True, exist_ok=True)
-        self.filepath_csv.parent.mkdir(parents=True, exist_ok=True)
+        self.filepath.parent.mkdir(parents=True, exist_ok=True)
 
     def __build_log_file(self) -> None:
         log_file_template = {
             "experiment_name": self.experiment_name,
-            "datetime": strftime("%Y-%m-%d %H:%M:%S"),
+            "creation_datetime": strftime("%Y-%m-%d %H:%M:%S"),
             "model": self.model,
             "total_cost": self.cost,
             "breakdown": []
         }
-        filepath = self.filepath_json
-        with open(filepath, 'w') as file:
+        with open(self.filepath, 'w') as file:
             json.dump(log_file_template, file, indent=4)
     
     def __build_log_breadown_entry(self, response: ChatCompletion) -> Dict:
