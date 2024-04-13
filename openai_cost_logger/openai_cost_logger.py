@@ -17,7 +17,7 @@ FILE_HEADER = [
     "cost"
 ]
 
-"""OpenAI cost logger"""
+"""OpenAI cost logger."""
 class OpenAICostLogger:
     def __init__(
         self,
@@ -68,6 +68,38 @@ class OpenAICostLogger:
         self.__write_cost_to_json(response)
         self.__validate_cost()
 
+        
+    def get_current_cost(self) -> float:
+        """Get the current cost of the cost tracker.
+
+        Returns:
+            float: The current cost.
+        """
+        return self.cost
+    
+    
+    def __get_answer_cost(self, answer: Dict) -> float:
+        """Calculate the cost of the answer based on the input and output tokens.
+
+        Args:
+            answer (dict): The response from the model.
+        Returns:
+            float: The cost of the answer.        
+        """
+        return (self.input_cost * answer.usage.prompt_tokens) / COST_UNIT + \
+                    (self.output_cost * answer.usage.completion_tokens) / COST_UNIT
+            
+            
+    def __validate_cost(self):
+        """Check if the cost exceeds the upperbound and raise an exception if it does.
+
+        Raises:
+            Exception: If the cost exceeds the upperbound.
+        """
+        if self.cost > self.cost_upperbound:
+            raise Exception(f"Cost exceeded upperbound: {self.cost} > {self.cost_upperbound}")
+
+
     def __write_cost_to_json(self, response: ChatCompletion) -> None:
         """Write the cost to a json file. 
 
@@ -81,10 +113,14 @@ class OpenAICostLogger:
         with open(self.filepath, 'w') as file:
             json.dump(data, file, indent=4)
 
+
     def __check_existance_log_folder(self) -> None:
+        """Check if the log folder exists and create it if it does not."""
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
 
+
     def __build_log_file(self) -> None:
+        """Create the log file with the header."""
         log_file_template = {
             "experiment_name": self.experiment_name,
             "creation_datetime": strftime("%Y-%m-%d %H:%M:%S"),
@@ -94,8 +130,17 @@ class OpenAICostLogger:
         }
         with open(self.filepath, 'w') as file:
             json.dump(log_file_template, file, indent=4)
+
     
     def __build_log_breadown_entry(self, response: ChatCompletion) -> Dict:
+        """Build a json log entry for the breakdown of the cost.
+
+        Args:
+            response (ChatCompletion): The response from the model.
+
+        Returns:
+            Dict: The json log entry.
+        """
         return {
             "cost": self.__get_answer_cost(response),
             "input_tokens": response.usage.prompt_tokens,
@@ -104,31 +149,3 @@ class OpenAICostLogger:
             "inferred_model": response.model,
             "datetime": strftime("%Y-%m-%d %H:%M:%S"),
         }
-        
-    def get_current_cost(self) -> float:
-        """Get the current cost of the cost tracker.
-
-        Returns:
-            float: The current cost.
-        """
-        return self.cost
-    
-    def __get_answer_cost(self, answer: Dict) -> float:
-        """Calculate the cost of the answer based on the input and output tokens.
-
-        Args:
-            answer (dict): The response from the model.
-        Returns:
-            float: The cost of the answer.        
-        """
-        return (self.input_cost * answer.usage.prompt_tokens) / COST_UNIT + \
-                    (self.output_cost * answer.usage.completion_tokens) / COST_UNIT
-            
-    def __validate_cost(self):
-        """Check if the cost exceeds the upperbound and raise an exception if it does.
-
-        Raises:
-            Exception: If the cost exceeds the upperbound.
-        """
-        if self.cost > self.cost_upperbound:
-            raise Exception(f"Cost exceeded upperbound: {self.cost} > {self.cost_upperbound}")
