@@ -42,6 +42,7 @@ class OpenAICostLogger:
             client_args (Dict, optional): The parameters to pass to the client. Defaults to {}.
         """
         self.cost = 0
+        self.n_responses = 0
         self.model = model
         self.input_cost = input_cost
         self.log_folder = log_folder
@@ -65,6 +66,7 @@ class OpenAICostLogger:
             response: ChatCompletion object from the model.
         """
         self.cost += self.__get_answer_cost(response)
+        self.n_responses += 1
         self.__write_cost_to_json(response)
         self.__validate_cost()
 
@@ -109,6 +111,7 @@ class OpenAICostLogger:
         with open(self.filepath, 'r') as file:
             data = json.load(file)
             data["total_cost"] = self.cost
+            data["total_responses"] = self.n_responses
             data["breakdown"].append(self.__build_log_breadown_entry(response))
         with open(self.filepath, 'w') as file:
             json.dump(data, file, indent=4)
@@ -126,6 +129,7 @@ class OpenAICostLogger:
             "creation_datetime": strftime("%Y-%m-%d %H:%M:%S"),
             "model": self.model,
             "total_cost": self.cost,
+            "total_responses": 0,
             "breakdown": []
         }
         with open(self.filepath, 'w') as file:
