@@ -42,8 +42,10 @@ Viz examples:
 .. image::images/viz_prints.png
    :alt: Viz prints examples.
    :align: center
+   :width: 500px
 
 .. image::images/strftime_agg.png
    :alt: Strftime aggregation example.
    :align: center
+   :width: 500px   
 
