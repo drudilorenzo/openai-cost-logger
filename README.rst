@@ -26,10 +26,26 @@ How to install:
 
 Key Features:
 -------------
-* Track the cost of every request you make to OpenAI and save them in a csv file.
-* Visualize the cost of all the requests you have made.
+* Track the cost of every request you make and save them in a JSON file.
+* Choose the feature you want to track (prompt_tokens, completion_tokens, completion, prompt, etc.).
+* Check the cost of your requests filtering by model or strftime aggregation (see the docs).
 
 Endpoint supported:
 -------------------
 * Chat completion.
-* Every endpoint which response contains the field "*usage.prompt_tokens*" and "*usage.completion_tokens*".
+* Every response passed to *OpenAICostLogger* should contain the fields "*usage.prompt_tokens*" and "*usage.completion_tokens*".
+  This is the only strict requirement of the library, the way you call the OpenAI API is totally up to you. If needed, you can
+  find an easy example in the demo file.
+
+Viz examples:
+-------------
+.. image::images/viz_prints.png
+   :alt: Viz prints examples.
+   :align: center
+   :width: 500px
+
+.. image::images/strftime_agg.png
+   :alt: Strftime aggregation example.
+   :align: center
+   :width: 500px   
+

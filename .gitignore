@@ -20,3 +20,6 @@ cost-logs/
 
 build/
 dist/
+
+# demo internal
+demo_internal.ipynb
