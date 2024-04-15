@@ -6,11 +6,13 @@ with open('README.rst') as f:
     long_description = f.read()
 
 # Get the version number from the environment
-version_number = os.getenv('VERSION_NUMBER')
-version_number = version_number.strip("v")
+# version_number = os.getenv('VERSION_NUMBER')
+# version_number = version_number.strip("v")
+
+version_number = '0.2.1'
 
 setup(
-    name='openai_cost_logger',
+    name='openai-cost-logger',
     version=version_number,
     author='Lorenzo Drudi | Mikolaj Boronski | Ivan Zakazov',
     description='OpenAI Cost Logger',
