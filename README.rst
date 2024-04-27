@@ -5,8 +5,10 @@
 OpenAI Cost Logger
 ==================
 
-Simple **cost logger** for **OpenAI requests**.
-Track the cost of every request you make to OpenAI and visualize them in a user-friendly way.
+* Simple **cost logger** for **OpenAI requests**.
+* Track the cost of every request you make to OpenAI and visualize them in a user-friendly way.
+* Homepage on `PyPI <https://pypi.org/project/openai-cost-logger/>`_.
+* `Demo file <https://github.com/drudilorenzo/track-openai-cost/blob/master/demo.ipynb>`_ with a usage example.
 
 How to install:
 ---------------
@@ -20,9 +22,6 @@ How to install:
       from openai_cost_logger import OpenAICostLoggerViz
       from openai_cost_logger import OpenAICostLoggerUtils
       from openai_cost_logger import DEFAULT_LOG_PATH, MODELS_COST
-
-* Homepage on `PyPI <https://pypi.org/project/openai-cost-logger/>`_.
-* `Demo file <https://github.com/drudilorenzo/track-openai-cost/blob/master/demo.ipynb>`_ with a usage example.
 
 Key Features:
 -------------
@@ -41,6 +40,6 @@ Note:
 
 Viz example:
 -------------
-.. image::https://drive.google.com/file/d/1lbmRJCe5VHqom0bdHzE2xi09lSfsp_Bm/view?usp=sharing
+.. image:: https://drive.google.com/file/d/1lbmRJCe5VHqom0bdHzE2xi09lSfsp_Bm/view?usp=sharing
    :alt: Viz example (prints + plot)
    :align: center
