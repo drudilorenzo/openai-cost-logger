@@ -1,12 +1,13 @@
 import os
 import json
-from datetime import datetime
 from typing import Dict
 from pathlib import Path
+from datetime import datetime
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
 from openai_cost_logger.constants import DEFAULT_LOG_PATH
+
 
 """Cost logger visualizer."""
 class OpenAICostLoggerViz:
@@ -57,9 +58,8 @@ class OpenAICostLoggerViz:
             if filename.endswith(".json"):
                 with open(Path(path, filename), mode='r') as file:
                     data = json.load(file)
-                    if data["model"] not in cost_by_model:
-                        cost_by_model[data["model"]] = 0
-                    cost_by_model[data["model"]] += data["total_cost"]
+                    for entry in data["breakdown"]:
+                        cost_by_model[entry["model"]] += entry["cost"]
         return cost_by_model
 
 
@@ -70,7 +70,7 @@ class OpenAICostLoggerViz:
             log_folder (str, optional): Cost logs directory. Defaults to DEFAULT_LOG_PATH.
                                         This method reads all the files in the specified directory.
         """
-        cost_by_model = OpenAICostLoggerViz.get_total_cost_by_model(path)
+        cost_by_model = OpenAICostLoggerViz.get_total_cost_by_model(path=path)
         for model, cost in cost_by_model.items():
             print(f"{model}: {round(cost, 6)} (USD)")
 

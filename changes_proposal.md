@@ -1,4 +1,4 @@
-1. ⌛ model has to be provided in form of enum - important, hard to juggle with all 0xxx versions 
+1. ✅ model has to be provided in form of enum - important, hard to juggle with all 0xxx versions  - Merged
 
 Change:
     - we can just infer it from `response.model`
@@ -15,7 +15,7 @@ Motivation:
  - allows easier integration, user only has to initialize tracker object and call `update_cost(response)`, 
    otherwise each chat completion call would have to be rewritten 
 
-4. ✅ log file just acumulates total cost
+4. ✅ log file just acumulates total cost - Merged
 
 Change: 
  - add breakdown of responses/input token per response/output token per response/cost per response
@@ -45,4 +45,6 @@ Change:
  - change strftime format to `strftime("%Y-%m-%d_%H:%M:%S")`, makes it more readable
  - we could possibly infer the datetime and do plots with datetime instead of str
 
-6. WIP
+6. ⌛ web ui for stats viz
+
+7. WIP

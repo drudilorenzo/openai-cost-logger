@@ -1,17 +1,8 @@
-from enum import Enum
-
 """Default value for the cost-logs directory."""
 DEFAULT_LOG_PATH = "cost-logs"
+    
 
-"""Enum containing the tested models."""
-class Models(Enum):
-    TURBO_3_5 = "gpt-3.5-turbo"
-    TURBO_3_5_INSTRUCT = "gpt-3.5-turbo-instruct"
-    AZURE_3_5_TURBO = "gpt-35-turbo-0125"
-    AZURE_4_TURBO = "gpt-4-0125-Preview"
-    AZURE_4 = "gpt-4-0613"
-
-"""The costs of the models above (per million tokens)."""
+"""The costs of the models above (per million tokens). Dictionary used in case the user does not provide the costs."""
 MODELS_COST = {
     "gpt-3.5-turbo": {
         "input": 0.5,
@@ -33,4 +24,8 @@ MODELS_COST = {
         "input": 30,
         "output": 60
     },
+    "text-embedding-ada-002": {
+        "input": 0.1,
+        "output": 0.0
+    }
 }
