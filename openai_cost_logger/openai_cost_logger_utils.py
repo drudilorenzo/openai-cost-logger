@@ -1,10 +1,11 @@
 from pathlib import Path
 
+
 """OpenAI cost logger utilities functions."""
 class OpenAICostLoggerUtils:
 
     @staticmethod
-    def get_api_key(path: str) -> str:
+    def read_api_key(path: str) -> str:
         """Return the key contained in the file.
 
         Args:
