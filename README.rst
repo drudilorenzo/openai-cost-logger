@@ -40,6 +40,6 @@ Note:
 
 Viz example:
 -------------
-.. image:: https://drive.google.com/file/d/1lbmRJCe5VHqom0bdHzE2xi09lSfsp_Bm/view?usp=sharing
+.. image:: images/example.png
    :alt: Viz example (prints + plot)
    :align: center
