@@ -121,6 +121,7 @@ class OpenAICostLoggerViz:
             last_n_days=last_n_days
         )
         
+
     @staticmethod
     def print_experiment_cost(experiment: str, path: str = DEFAULT_LOG_PATH) -> None:
         """Print the cost of the specified experiment. The name is case-insensitive.
