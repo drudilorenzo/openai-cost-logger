@@ -120,3 +120,22 @@ class OpenAICostLoggerViz:
             strftime_aggregator="%Y-%m-%d", 
             last_n_days=last_n_days
         )
+        
+
+    @staticmethod
+    def print_experiment_cost(experiment: str, path: str = DEFAULT_LOG_PATH) -> None:
+        """Print the cost of the specified experiment. The name is case-insensitive.
+
+        Args:
+            experiment (str): The experiment name.
+            path (str, optional): Cost logs directory. Defaults to DEFAULT_LOG_PATH.
+                                  This method reads all the files in the specified directory.
+        """
+        cost = 0
+        for filename in os.listdir(path):
+            if filename.endswith(".json"):
+                with open(Path(path, filename), mode='r') as file:
+                    data = json.load(file)
+                    if "experiment_name" in data and data["experiment_name"].lower() == experiment.lower():
+                        cost += data["total_cost"]
+        print(f"Cost of '{experiment}': {round(cost, 6)} (USD)")
