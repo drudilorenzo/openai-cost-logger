@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 with open('README.rst') as f:
     long_description = f.read()
 
-version_number = '0.4.1'
+version_number = '0.5.0'
 
 setup(
     name='openai-cost-logger',

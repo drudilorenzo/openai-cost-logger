@@ -4,7 +4,7 @@ Change:
     - we can just infer it from `response.model`
     - removes possible problems with choosing the right enum or forgetting to change it while changing the model for experiment
 
-2. ⌛ allow for experiment/subexperiment stats
+2. ✅ allow for experiment/subexperiment stats
 
 3. ✅ cost tracker handles completion creation - Merged
 
@@ -46,5 +46,3 @@ Change:
  - we could possibly infer the datetime and do plots with datetime instead of str
 
 6. ⌛ web ui for stats viz
-
-7. WIP
